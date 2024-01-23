@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RSA Key Pair Example</title>
+    <script src="rsa.js"></script>
+</head>
+<body>
+    <h2>RSA Key Pair Example</h2>
+    <button onclick="generateKeyPair()">Generate Key Pair</button>
+    <p>Public Key: <textarea id="publicKey" readonly rows="4" cols="50"></textarea></p>
+    <p>Private Key: <textarea id="privateKey" readonly rows="4" cols="50"></textarea></p>
+    <textarea id="inputText" placeholder="Enter text to encrypt" rows="4" cols="50"></textarea>
+    <br><br>
+    <button onclick="performEncryption()">Encrypt</button>
+    <button onclick="performDecryption()">Decrypt</button>
+    <br><br>
+    <textarea id="outputText" placeholder="Result" rows="4" cols="50" readonly></textarea>
+</body>
+</html>
+
