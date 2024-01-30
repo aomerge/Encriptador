@@ -150,7 +150,7 @@ main.elementGrid section.Ouput div.output {
   height: 90vh;
 }
 main.elementGrid section.Ouput div.result {
-  width: 240px;
+  width: 250px;
   grid-template-rows: repeat(5, 1fr);
 }
 main.elementGrid section.Ouput div.output svg {
