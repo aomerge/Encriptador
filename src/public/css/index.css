@@ -130,6 +130,15 @@ main.elementGrid section.textarea textarea {
   height: 40vh !important;
   padding: 20px;
 }
+main.elementGrid section.textarea input#password{
+  margin-inline-start: 60px;
+  margin-block-end: 20px;
+  width: 90%;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0px 14px 32px -8px rgba(0, 0, 0, 0.2);
+}
 /* output */
 main.elementGrid section.Ouput {
   position: static;
@@ -149,6 +158,19 @@ main.elementGrid section.Ouput div.output {
   align-items: center;
   height: 90vh;
 }
+main.elementGrid section.Ouput div.RSAKey  {
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+main.elementGrid section.Ouput div.RSAKey section{
+  border-radius: 20px;
+  padding: 20px ;
+  gap: 10px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 24px 32px -8px rgba(0, 0, 0, 0.08);
+  overflow-wrap: anywhere;
+}
 main.elementGrid section.Ouput div.result {
   width: 250px;
   grid-template-rows: repeat(5, 1fr);
@@ -158,12 +180,14 @@ main.elementGrid section.Ouput div.output svg {
   height: 100%;
 }
 main.elementGrid section.Ouput div.result p {
+  overflow-wrap: anywhere;
   grid-row: 1 / 5;
   justify-content: start;
   text-align: start;
   display: grid;
   align-items: start;
   width: 100%;
+  padding: 0;
   height: 90%;
 }
 main.elementGrid section.Ouput div.output section {
@@ -241,6 +265,15 @@ main.elementGrid section.buttons div button.white:hover {
   background: var(--Dark-blue-dark-blue-300, #0a3871);
   border: 1px solid var(--Dark-blue-dark-blue-300, #0a3871);
   color: var(--White, #fff);
+}
+main.elementGrid section.buttons div button#generateKey {  
+  animation: ledpanel 3s infinite;
+}
+main.elementGrid section.buttons div button#generateKey:hover {
+  animation: none;
+}
+main.elementGrid section.buttons div button.AniNone {
+  animation: none !important;
 }
 
 /*responsive*/
@@ -381,4 +414,16 @@ main.elementGrid section.buttons div button.white:hover {
   100% {
     opacity: 0;
   }
+}
+@keyframes ledpanel {
+  0% {
+    background: var(--Dark-blue-dark-blue-300, #0a3871);
+  }
+  50% {
+    background: var(--Dark-blue-dark-blue-300, #b71111);
+  }
+  100% {
+    background: var(--Dark-blue-dark-blue-300, #0a3871);
+  }
+  
 }

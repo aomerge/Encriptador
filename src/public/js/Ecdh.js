@@ -1,24 +1,3 @@
-async function performKeyExchange() {
-    // Generate key pairs for Alice and Bob
-    const aliceKeyPair = await generateECDHKeyPair();
-    const bobKeyPair = await generateECDHKeyPair();
-
-    // Export public keys
-    const alicePublicKey = await exportPublicKey(aliceKeyPair.publicKey);
-    const bobPublicKey = await exportPublicKey(bobKeyPair.publicKey);
-
-    // Import the other's public key
-    const aliceImportedPublicKey = await importPublicKey(bobPublicKey);
-    const bobImportedPublicKey = await importPublicKey(alicePublicKey);
-
-    // Derive shared secrets
-    const aliceSharedSecret = await deriveSharedSecret(aliceKeyPair.privateKey, aliceImportedPublicKey);
-    const bobSharedSecret = await deriveSharedSecret(bobKeyPair.privateKey, bobImportedPublicKey);
-
-    // Display the shared secret
-    document.getElementById("sharedSecret").value = byteArrayToHex(aliceSharedSecret);
-}
-
 async function generateECDHKeyPair() {
     return await window.crypto.subtle.generateKey(
         {

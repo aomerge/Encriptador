@@ -1,27 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Encryption/Decryption Example</title>
-    <link rel="stylesheet" href="../public/css/index.css">
-</head>
-<body id="container">    
-    <main class="elementGrid">         
-        <section id="header">
-            <div>                
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="48" viewBox="0 0 32 48" fill="none">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M23.3958 23.6529C23.3524 23.9311 23.2466 24.1959 23.0863 24.4275C22.926 24.659 22.7154 24.8512 22.4703 24.9898C21.9766 25.3086 21.5447 25.468 21.1077 25.6274C20.177 25.9488 19.1974 26.2702 18.1613 26.643C17.0687 27.0157 16.0891 27.3885 15.215 27.6585C14.1249 28.0313 13.0888 28.3526 12.1041 28.7254C11.3633 29.0425 10.6674 29.4556 10.0345 29.9544C9.44584 30.4877 8.93212 31.0983 8.50734 31.7695C8.07027 32.515 7.79518 33.4766 7.79518 34.5975C7.79518 36.842 8.34022 38.5491 9.43289 39.6161C10.523 40.7396 12.5438 41.2718 15.5389 41.2718C18.5933 41.2718 20.6655 40.6856 21.7607 39.5107C22.8482 38.3357 23.3932 36.6826 23.3932 34.5487V23.6529H23.3958ZM15.5415 0C20.8891 0 24.815 1.01553 27.3217 3.09802C29.831 5.12908 31.0856 7.74119 31.0856 10.8366V37.2148C31.0856 38.2817 30.8696 39.4567 30.4891 40.737C30.1035 42.0225 29.3425 43.1949 28.1418 44.2592C26.9977 45.3313 25.4166 46.2389 23.3984 46.933C21.3802 47.6272 18.7629 48 15.5441 48C12.3304 48 9.70798 47.6272 7.69234 46.933C5.6767 46.2389 4.09298 45.3313 2.9489 44.2592C1.8846 43.3001 1.07834 42.089 0.604178 40.737C0.218532 39.4592 0 38.2843 0 37.2174V33.001C0 30.7565 0.599036 28.674 1.79968 26.8563C3.00032 24.9898 4.68945 23.7095 6.8722 22.9073C7.96229 22.5345 9.21693 22.1618 10.6335 21.681C12.0527 21.1976 13.3588 20.7169 14.6699 20.2927C15.9811 19.8633 17.1252 19.434 18.1048 19.0586C18.6959 18.8221 19.2963 18.6094 19.9044 18.421L20.8866 17.9402C21.2722 17.7268 21.6501 17.4055 22.0332 16.9787C22.4137 16.5545 22.7402 16.0737 23.0153 15.5389C23.306 14.9599 23.4557 14.3203 23.4524 13.6724V11.9627C23.4564 11.3361 23.3249 10.716 23.0667 10.145C22.8508 9.5023 22.4137 8.91612 21.8147 8.38393C21.2156 7.84917 20.3955 7.42239 19.416 7.09845C18.4338 6.78222 17.1278 6.62025 15.6521 6.62025C12.5977 6.62025 10.5795 7.21157 9.48945 8.43535C8.5639 9.50488 8.01885 10.8392 7.91087 12.3329C7.91087 12.6543 7.63835 12.8677 7.30927 12.8677L0.658168 12.9757C0.500177 12.9764 0.348309 12.9146 0.235632 12.8039C0.122956 12.6931 0.0585941 12.5423 0.0565613 12.3844V10.8418C0.0565613 9.3429 0.331655 7.95458 0.930691 6.62025C1.5323 5.28334 2.46042 4.16497 3.71248 3.20086C4.96711 2.24189 6.60482 1.44231 8.56647 0.907552C10.4767 0.26481 12.8214 0 15.5466 0H15.5415Z" fill="#0A3871"/>
-                </svg>
-            </div>
-            <h1>Challenge encription </h1>
-        </section>       
-        <section class="textarea">
-            <textarea  placeholder="Ingrese el texto aqui" name="hola" id="input" cols="30" rows="10"></textarea>
-        </section>
-        <section class="Ouput" >
-            <div class="output" id="output">
-                <section>
+/**
+ * Encrypts the given text using the provided password.
+ * @param {string} text - The text to be encrypted.
+ * @param {string} password - The password used for encryption.
+ * @returns {Promise<string>} The encrypted text in Base64 format.
+ */
+async function encrypt(text, password) {
+  const pwUtf8 = new TextEncoder().encode(password);
+  const pwHash = await crypto.subtle.digest("SHA-256", pwUtf8);
+  const iv = crypto.getRandomValues(new Uint8Array(64));
+  const alg = { name: "AES-GCM", iv: iv };
+  const key = await crypto.subtle.importKey("raw", pwHash, alg, false, [
+    "encrypt",
+  ]);
+  const ptUtf8 = new TextEncoder().encode(text);
+  const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUtf8);
+  const ctArray = Array.from(new Uint8Array(ctBuffer));
+  const ivArray = Array.from(iv);
+  const resultArray = ivArray.concat(ctArray);
+  const resultStr = resultArray
+    .map((byte) => String.fromCharCode(byte))
+    .join("");
+  const resultBase64 = btoa(resultStr);
+  return resultBase64;
+}
+
+/**
+ * Decrypts the given ciphertext using the provided password.
+ * @param {string} dataBase64 - The base64-encoded ciphertext to decrypt.
+ * @param {string} password - The password used for decryption.
+ * @returns {Promise<string>} - A promise that resolves to the decrypted plaintext.
+ */
+async function decrypt(dataBase64, password) {
+  const dataStr = atob(dataBase64);
+  const dataArr = new Uint8Array(dataStr.length);
+  for (let i = 0; i < dataStr.length; i++) {
+    dataArr[i] = dataStr.charCodeAt(i);
+  }
+  const iv = dataArr.slice(0, 64); // Extrae el IV que usaste en la encriptación
+  const ctArray = dataArr.slice(64); // Extrae el texto cifrado después del IV
+
+  const pwUtf8 = new TextEncoder().encode(password); // Convierte la contraseña a UTF-8
+  const pwHash = await crypto.subtle.digest("SHA-256", pwUtf8); // Hash de la contraseña
+  const alg = { name: "AES-GCM", iv: iv }; // Usa el mismo algoritmo y IV
+  const key = await crypto.subtle.importKey("raw", pwHash, alg, false, [
+    "decrypt",
+  ]); // Importa la clave para desencriptar
+
+  const ptBuffer = await crypto.subtle.decrypt(alg, key, ctArray); // Desencripta el texto cifrado
+  const ptUtf8 = new TextDecoder().decode(ptBuffer); // Convierte el resultado a cadena UTF-8
+
+  return ptUtf8; // Retorna el texto plano desencriptado
+}
+
+/**
+ * Performs encryption when the "encripter" button is clicked.
+ * Retrieves the input text and password from the DOM elements.
+ * Encrypts the text using the provided password.
+ * Displays the encrypted text and a copy button in the output element.
+ * @returns {Promise<void>} A promise that resolves when the encryption is performed.
+ */
+async function performEncryption() {
+  const btnEncripter = document.getElementById("encripter");
+  await btnEncripter.addEventListener("click", async (e) => {
+    const text = document.getElementById("inputText").value;
+    const password = document.getElementById("password").value;
+    // Regular expression to check for uppercase letters
+
+    let uppercaseLetters = text.match(/[A-Z]/g);
+    let accentsRegex = text.match(/[\u00C0-\u00FF]/g);
+    let specialCharsRegex = text.match(
+      /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g
+    );
+    // Regular expression to check for special characters (,{} in this case)
+    if (uppercaseLetters || accentsRegex || specialCharsRegex) {
+      const elementContent = `<section>
                     <svg xmlns="http://www.w3.org/2000/svg" width="336" height="304" viewBox="0 0 336 304" fill="none">
                                 <g clip-path="url(#clip0_2_1323)">
                                     <path d="M0.675649 249.836C3.6088 248.4 4.854 244.589 8.03619 243.595C11.3014 242.574 14.9263 244.589 17.9148 242.38C19.2153 241.414 20.1838 239.812 21.7611 239.232C23.1447 238.735 24.5836 239.287 25.9118 239.702C27.0463 240.061 28.1808 240.392 29.3153 240.751C33.8811 242.159 38.4192 243.54 42.9849 244.948C48.1594 246.522 53.3063 248.124 58.4808 249.698C58.9789 249.864 59.2002 249.063 58.7021 248.897C49.2386 245.998 39.8027 243.098 30.3392 240.199C28.1255 239.536 25.8288 238.514 23.5321 238.238C21.9271 238.045 20.6543 238.68 19.5197 239.729C17.9425 241.193 16.7526 242.546 14.4559 242.656C12.5466 242.767 10.6649 242.27 8.75563 242.574C4.82632 243.181 3.60879 247.461 0.288249 249.091C-0.209832 249.367 0.205238 250.085 0.675649 249.836Z" fill="#E8E8E8"/>
@@ -161,31 +213,50 @@
                                     </clipPath>
                                 </defs>
                     </svg>
-                    <h2>Ningún mensaje fue encontrado</h2>
-                    <p>Ingresa el texto que desees encriptar o desencriptar.</p>
-                </section>
-            </div>
-        </section>
-        <section class="buttons">
-            <div id="bi">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <g clip-path="url(#clip0_2_231)">
-                        <path d="M16 8C16 10.1217 15.1571 12.1566 13.6569 13.6569C12.1566 15.1571 10.1217 16 8 16C5.87827 16 3.84344 15.1571 2.34315 13.6569C0.842855 12.1566 0 10.1217 0 8C0 5.87827 0.842855 3.84344 2.34315 2.34315C3.84344 0.842855 5.87827 0 8 0C10.1217 0 12.1566 0.842855 13.6569 2.34315C15.1571 3.84344 16 5.87827 16 8ZM8 4C7.87361 4.00007 7.74863 4.02662 7.63312 4.07793C7.51761 4.12924 7.41413 4.20418 7.32934 4.29791C7.24456 4.39165 7.18035 4.5021 7.14084 4.62217C7.10134 4.74223 7.08743 4.86923 7.1 4.995L7.45 8.502C7.46176 8.63977 7.5248 8.76811 7.62664 8.86164C7.72849 8.95516 7.86173 9.00705 8 9.00705C8.13827 9.00705 8.27151 8.95516 8.37336 8.86164C8.4752 8.76811 8.53824 8.63977 8.55 8.502L8.9 4.995C8.91257 4.86923 8.89866 4.74223 8.85915 4.62217C8.81965 4.5021 8.75544 4.39165 8.67066 4.29791C8.58587 4.20418 8.48239 4.12924 8.36688 4.07793C8.25137 4.02662 8.12639 4.00007 8 4ZM8.002 10C7.73678 10 7.48243 10.1054 7.29489 10.2929C7.10736 10.4804 7.002 10.7348 7.002 11C7.002 11.2652 7.10736 11.5196 7.29489 11.7071C7.48243 11.8946 7.73678 12 8.002 12C8.26722 12 8.52157 11.8946 8.70911 11.7071C8.89664 11.5196 9.002 11.2652 9.002 11C9.002 10.7348 8.89664 10.4804 8.70911 10.2929C8.52157 10.1054 8.26722 10 8.002 10Z" fill="#495057"/>
-                    </g>
-                    <defs>
-                        <clipPath id="clip0_2_231">
-                        <rect width="16" height="16" fill="white"/>
-                        </clipPath>
-                    </defs>
-                </svg>
-                <p>Solo letras minúsculas y sin acentos</p>
-            </div>
-            <div>
-                <button id="encripter">Encriptar</button>
-                <button id="decripter" class="white" onclick="performDecryption()">Desencriptar</button>
-            </div>
-        </section>
-    </main>
-    <script src="../public/js/encriptingMessenge.js"></script>
-</body>
-</html>
+                    <h2>Ingresa parametros permitidos</h2>
+                    <p>Ingresa un dato valido nuestro programa solo hacepta letras minúsculas y sin acentos.</p>
+                </section>`;
+      output.classList.remove("result");
+      output.innerHTML = elementContent;
+      return;
+    }
+    const encryptedText = await encrypt(text, password);
+    const outputText = `<p>${encryptedText}</p>`;
+    const buttonCopy =
+      await `<button onclick="copyToClipboard('${encryptedText}')"  id="copy">Copiar</button>`;
+
+    console.log(encryptedText);
+    if (password != "" && text != "") {
+      output.innerHTML = (await outputText) + (await buttonCopy);
+      output.classList.add("result");
+    } else {
+      alert("No hay mensaje para encriptar");
+    }
+  });
+}
+
+/**
+ * Performs decryption of the input text using the provided password.
+ * @returns {Promise<void>} A promise that resolves when the decryption is complete.
+ */
+async function performDecryption() {
+  const btnEncripter = document.getElementById("decripter");
+  await btnEncripter.addEventListener("click", async (e) => {
+    const text = document.getElementById("inputText").value;
+    const password = document.getElementById("password").value;
+    const decryptedText = await decrypt(text, password)
+      .then((res) => res)
+      .catch((err) => console.log(err));
+
+    const outputText = `<p>${decryptedText}</p>`;
+    const buttonCopy =
+      await `<button onclick="copyToClipboard('${decryptedText}')"  id="copy">Copiar</button>`;
+
+    if (password != "" && text != "") {
+      output.innerHTML = (await outputText) + (await buttonCopy);
+      output.classList.add("result");
+    } else {
+      alert("No hay mensaje para encriptar");
+    }
+  });
+}

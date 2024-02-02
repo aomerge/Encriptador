@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple AES Encryption/Decryption</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../public/css/index.css">
+</head>
+<body>
+    <main class="elementGrid">        
+        <section id="header"></section>              
+        <section class="textarea"></section>
+        <section class="buttons"></section>             
+        <section class="Ouput"></section>
+    </main>
+    <script src="../public/js/AES.js"></script>
+    <script src="../components/header.js"></script>
+    <script src="../components/buttons.js"></script>
+    <script src="../components/output.js"></script>
+    <script src="../components/textarea.js"></script>
+    <script src="../public/utils/copyClipboard.js"></script>
+    <script>
+        TextareaPassword();
+        ButtonsTwo();
+        showOutput();
+        headerChange("AES Encryption/Decryption Example");
+        performEncryption();     
+        performDecryption();   
+    </script>
+</body>
+</html>
+
+

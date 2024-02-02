@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8"/>
     <title>Simple Encryption Example</title>
-    <script src="Des.js"></script>
+    <link rel="stylesheet" href="../public/css/index.css">
 </head>
 <body>
-    <h2>Simple Encryption/Decryption Example</h2>
-    <input type="text" id="inputText" placeholder="Enter text">
-    <button onclick="performEncryption()">Encrypt</button>
-    <button onclick="performDecryption()">Decrypt</button>
-    <p>Output: <span id="output"></span></p>
+    <main class="elementGrid">
+        <section id="header"></section>     
+        <section class="textarea"></section>   
+        <section class="buttons"></section> 
+        <section class="Ouput"></section>        
+    </main>
+    <script src="../public/js/Des.js"></script>
+    <script src="../components/header.js"></script>
+    <script  src="../components/textarea.js"></script>
+    <script src="../public/utils/performance.js"></script>
+    <script src="../components/buttons.js"></script>
+    <script src="../components/output.js"></script>
+    <script src="../public/utils/copyClipboard.js"></script>
+    <script>
+        headerChange("DES Encryption/Decryption Example");
+        ButtonsTwo();
+        Textarea();
+        showOutput();
+        performEncryptionDES();
+        performDecryptionDES();        
+    </script>
 </body>
 </html>

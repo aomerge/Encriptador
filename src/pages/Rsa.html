@@ -1,20 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8" />
     <title>RSA Key Pair Example</title>
-    <script src="rsa.js"></script>
+    <link rel="stylesheet" href="../public/css/index.css">
 </head>
 <body>
-    <h2>RSA Key Pair Example</h2>
-    <button onclick="generateKeyPair()">Generate Key Pair</button>
-    <p>Public Key: <textarea id="publicKey" readonly rows="4" cols="50"></textarea></p>
-    <p>Private Key: <textarea id="privateKey" readonly rows="4" cols="50"></textarea></p>
-    <textarea id="inputText" placeholder="Enter text to encrypt" rows="4" cols="50"></textarea>
-    <br><br>
-    <button onclick="performEncryption()">Encrypt</button>
-    <button onclick="performDecryption()">Decrypt</button>
-    <br><br>
-    <textarea id="outputText" placeholder="Result" rows="4" cols="50" readonly></textarea>
+    <main class="elementGrid">
+        <section id="header"></section>
+        <section class="textarea"></section>
+        <section class="buttons"></section>
+        <section class="Ouput" >
+            <div class="output RSAKey">
+                <section id="publicKey" >                    
+                    <h2>Public Key</h2>
+                    <p>Ingresa el texto que desees encriptar o desencriptar.</p>
+                </section>
+                <section id="output">
+                    <h2>Private Key</h2>
+                    <p>Ingresa el texto que desees encriptar o desencriptar.</p>
+                </section>
+            </div>           
+        </section>
+    </main>
+
+    <script src="../public/js/RSA.js"></script>      
+    <script src="../components/output.js"></script>
+    <script src="../components/header.js"></script>
+    <script  src="../components/textarea.js"></script>
+    <script src="../public/utils/performance.js"></script>
+    <script src="../components/buttons.js"></script>
+    <script src="../public/utils/copyClipboard.js"></script>
+    <script>
+        headerChange("RSA Key Pair Example");
+        ButtonsOne("Generate Key Pair");
+        Textarea();
+        ButtonsThree();        
+        performEncryptionDES();
+        performDecryptionDES();
+    </script>        
 </body>
 </html>
 

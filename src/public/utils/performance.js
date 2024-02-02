@@ -1,85 +1,23 @@
 /**
- * Represents the encripter element.
- * @type {HTMLElement}
+ * Performs encryption when the "encripter" button is clicked.
+ * Retrieves the input text and password from the DOM elements.
+ * Encrypts the text using the provided password.
+ * Displays the encrypted text and a copy button in the output element.
+ * @returns {Promise<void>} A promise that resolves when the encryption is performed.
  */
-const encripter = document.getElementById("encripter");
-/**
- * Represents the decripter element.
- * @type {HTMLElement}
- */
-const decripter = document.getElementById("decripter");
+async function performEncryption() {
+  const btnEncripter = document.getElementById("encripter");
+  await btnEncripter.addEventListener("click", async (e) => {
+    const text = document.getElementById("inputText").value;
+    const password = document.getElementById("password").value;
+    // Regular expression to check for uppercase letters
 
-/**
- * The output element used to display the encrypted message.
- * @type {HTMLElement}
- */
-const output = document.getElementById("output");
-/**
- * Represents the textarea element.
- * @type {HTMLTextAreaElement}
- */
-const textarea = document.getElementById("input");
-
-/**
- * Encrypts the given text using a simple encryption algorithm.
- *
- * @param {string} text - The text to be encrypted.
- * @returns {Promise<string>} The encrypted text.
- */
-async function SimpleEncryption(text) {
-  var text = text.toLowerCase();
-  var text = text.replace(/e/g, "enter");
-  var text = text.replace(/i/g, "imes");
-  var text = text.replace(/a/g, "ai");
-  var text = text.replace(/o/g, "ober");
-  var text = text.replace(/u/g, "ufat");
-  return text;
-}
-
-/**
- * Decrypts a given text using a simple substitution algorithm.
- * @param {string} text - The text to be decrypted.
- * @returns {string} - The decrypted text.
- */
-async function SimpleDecryption(text) {
-  var text = text.toLowerCase();
-  var text = text.replace(/enter/g, "e");
-  var text = text.replace(/imes/g, "i");
-  var text = text.replace(/ai/g, "a");
-  var text = text.replace(/ober/g, "o");
-  var text = text.replace(/ufat/g, "u");
-  return text;
-}
-
-/**
- * Copies the specified text to the clipboard.
- *
- * @param {string} text - The text to be copied.
- */
-function copyToClipboard(text) {
-  // Create a temporary textarea element
-  const buttonCopy = document.getElementById("copy");
-  const textarea = document.createElement("textarea");
-  textarea.value = text;
-  document.body.appendChild(textarea);
-  // Select the text and copy it to the clipboard
-  textarea.select();
-  document.execCommand("copy");
-  // Remove the temporary element
-  document.body.removeChild(textarea);
-  buttonCopy.classList.add("fadeIn");
-  buttonCopy.innerHTML = "Copiado!";
-}
-
-encripter.addEventListener("click", async (e) => {
-  var text = await textarea.value;
-  
-  // Regular expression to check for uppercase letters
-  
-  let uppercaseLetters = text.match(/[A-Z]/g);
-  let accentsRegex = text.match(/[\u00C0-\u00FF]/g);
-  let specialCharsRegex = text.match(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g);
-  // Regular expression to check for special characters (,{} in this case)  
+    let uppercaseLetters = text.match(/[A-Z]/g);
+    let accentsRegex = text.match(/[\u00C0-\u00FF]/g);
+    let specialCharsRegex = text.match(
+      /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g
+    );
+    // Regular expression to check for special characters (,{} in this case)
     if (uppercaseLetters || accentsRegex || specialCharsRegex) {
       const elementContent = `<section>
                     <svg xmlns="http://www.w3.org/2000/svg" width="336" height="304" viewBox="0 0 336 304" fill="none">
@@ -228,32 +166,64 @@ encripter.addEventListener("click", async (e) => {
       output.innerHTML = elementContent;
       return;
     }
-  const outputText = await `<p>${await SimpleEncryption(text)}</p>`;
-  const buttonCopy =
-    await `<button onclick="copyToClipboard('${await SimpleEncryption(
-      text
-    )}')"  id="copy">Copiar</button>`;
-  if ((await SimpleEncryption(text)) != "") {
-    output.innerHTML = (await outputText) + (await buttonCopy);
-    output.classList.add("result");    
-  }else{
+    const encryptedText = await encrypt(text, password);
+    const outputText = `<p>${encryptedText}</p>`;
+    const buttonCopy =
+      await `<button onclick="copyToClipboard('${encryptedText}')"  id="copy">Copiar</button>`;
+
+    console.log(encryptedText);
+    if (password != "" && text != "") {
+      output.innerHTML = (await outputText) + (await buttonCopy);
+      output.classList.add("result");
+    } else {
       alert("No hay mensaje para encriptar");
-  }
-  return;
-});
+    }
+  });
+}
+/**
+ * Performs decryption of the input text using the provided password.
+ * @returns {Promise<void>} A promise that resolves when the decryption is complete.
+ */
+async function performDecryption() {
+  const btnEncripter = document.getElementById("decripter");
+  await btnEncripter.addEventListener("click", async (e) => {
+    const text = document.getElementById("inputText").value;
+    const password = document.getElementById("password").value;
+    const decryptedText = await decrypt(text, password)
+      .then((res) => res)
+      .catch((err) => console.log(err));
 
-decripter.addEventListener("click", async (e) => {
-  var text = textarea.value;
-  // Regular expression to check for uppercase letters
+    const outputText = `<p>${decryptedText}</p>`;
+    const buttonCopy =
+      await `<button onclick="copyToClipboard('${decryptedText}')"  id="copy">Copiar</button>`;
 
-  let uppercaseLetters = text.match(/[A-Z]/g);
-  let accentsRegex = text.match(/[\u00C0-\u00FF]/g);
-  let specialCharsRegex = text.match(
-    /[\{\}\[\]\/?.,;:|\)*~`^\-_+<>@\#$%&\\\=\(\'\"]/g
-  );
-  // Regular expression to check for special characters (,{} in this case)
-  if (uppercaseLetters || accentsRegex || specialCharsRegex) {
-    const elementContent = `<section>
+    if (password != "" && text != "") {
+      output.innerHTML = (await outputText) + (await buttonCopy);
+      output.classList.add("result");
+    } else {
+      alert("No hay mensaje para encriptar");
+    }
+  });
+}
+
+/**
+ * Performs encryption.of input value.
+ * @returns {Promise<void>} A promise that resolves when the encryption is complete.
+ */
+async function performEncryptionDES() {
+  const btnEncripter = document.getElementById("encripter");
+  await btnEncripter.addEventListener("click", async (e) => {
+
+    const text = document.getElementById("inputText").value;
+    
+    let uppercaseLetters = text.match(/[A-Z]/g);
+    let accentsRegex = text.match(/[\u00C0-\u00FF]/g);
+    let specialCharsRegex = text.match(
+      /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g
+    );
+    // Regular expression to check for special characters (,{} in this case)
+    if (uppercaseLetters || accentsRegex || specialCharsRegex) {
+      const elementContent = `<section>
                     <svg xmlns="http://www.w3.org/2000/svg" width="336" height="304" viewBox="0 0 336 304" fill="none">
                                 <g clip-path="url(#clip0_2_1323)">
                                     <path d="M0.675649 249.836C3.6088 248.4 4.854 244.589 8.03619 243.595C11.3014 242.574 14.9263 244.589 17.9148 242.38C19.2153 241.414 20.1838 239.812 21.7611 239.232C23.1447 238.735 24.5836 239.287 25.9118 239.702C27.0463 240.061 28.1808 240.392 29.3153 240.751C33.8811 242.159 38.4192 243.54 42.9849 244.948C48.1594 246.522 53.3063 248.124 58.4808 249.698C58.9789 249.864 59.2002 249.063 58.7021 248.897C49.2386 245.998 39.8027 243.098 30.3392 240.199C28.1255 239.536 25.8288 238.514 23.5321 238.238C21.9271 238.045 20.6543 238.68 19.5197 239.729C17.9425 241.193 16.7526 242.546 14.4559 242.656C12.5466 242.767 10.6649 242.27 8.75563 242.574C4.82632 243.181 3.60879 247.461 0.288249 249.091C-0.209832 249.367 0.205238 250.085 0.675649 249.836Z" fill="#E8E8E8"/>
@@ -396,18 +366,88 @@ decripter.addEventListener("click", async (e) => {
                     <h2>Ingresa parametros permitidos</h2>
                     <p>Ingresa un dato valido nuestro programa solo hacepta letras minúsculas y sin acentos.</p>
                 </section>`;
-    output.classList.remove("result");
-    output.innerHTML = elementContent;
-    return;
-  }
-  const outputText = `<p>${await SimpleDecryption(text)}</p>`;
-  const buttonCopy =   await `<button onclick="copyToClipboard('${await SimpleEncryption(
-      text
-    )}')"  id="copy">Copiar</button>`;
-     if ((await SimpleEncryption(text)) != "") {
-       output.innerHTML = (await outputText) + (await buttonCopy);
-       output.classList.add("result");
-     } else {
-       alert("No hay mensaje para encriptar");
-     }
-});
+      output.classList.remove("result");
+      output.innerHTML = elementContent;
+      return;
+    }
+    const encryptedText = await encrypt(text);
+    const outputText = `<p>${encryptedText}</p>`;
+    const buttonCopy =
+      await `<button onclick="copyToClipboard('${encryptedText}')"  id="copy">Copiar</button>`;
+
+    console.log(encryptedText);
+    if (text != "") {
+      output.innerHTML = (await outputText) + (await buttonCopy);
+      output.classList.add("result");
+    } else {
+      alert("No hay mensaje para encriptar");
+    }
+  });
+}
+
+/**
+ * Performs the decryption process using DES algorithm.
+ * @returns {Promise<void>} A promise that resolves when the decryption process is complete.
+ */
+async function performDecryptionDES() {
+  const btnEncripter = document.getElementById("decripter");
+  await btnEncripter.addEventListener("click", async (e) => {
+    const text = document.getElementById("inputText").value;
+    const decryptedText = await decrypt(text);
+
+    const outputText = `<p>${decryptedText}</p>`;
+    const buttonCopy =
+      await `<button onclick="copyToClipboard('${decryptedText}')"  id="copy">Copiar</button>`;
+
+    if (text != "") {
+      output.innerHTML = (await outputText) + (await buttonCopy);
+      output.classList.add("result");
+    } else {
+      alert("No hay mensaje para encriptar");
+    }
+  });
+}
+
+/**
+ * Performs the key exchange process between Alice and Bob.
+ * Generates key pairs for Alice and Bob, exports and imports public keys,
+ * derives shared secrets, and displays the shared secret.
+ * @returns {Promise<void>} A promise that resolves when the key exchange is completed.
+ */
+async function performKeyExchange() {
+  // Generate key pairs for Alice and Bob
+  const aliceKeyPair = await generateECDHKeyPair();
+  const bobKeyPair = await generateECDHKeyPair();
+
+  // Export public keys
+  const alicePublicKey = await exportPublicKey(aliceKeyPair.publicKey);
+  const bobPublicKey = await exportPublicKey(bobKeyPair.publicKey);
+
+  // Import the other's public key
+  const aliceImportedPublicKey = await importPublicKey(bobPublicKey);
+  const bobImportedPublicKey = await importPublicKey(alicePublicKey);
+
+  // Derive shared secrets
+  const aliceSharedSecret = await deriveSharedSecret(
+    aliceKeyPair.privateKey,
+    aliceImportedPublicKey
+  );
+  const bobSharedSecret = await deriveSharedSecret(
+    bobKeyPair.privateKey,
+    bobImportedPublicKey
+  );  
+
+  const btnEncripter = document.getElementById("PerformKey");
+  await btnEncripter.addEventListener("click", async (e) => {    
+    const key = byteArrayToHex(aliceSharedSecret);
+     const outputText = `<p>${key}</p>`;
+      const buttonCopy =
+        await `<button onclick="copyToClipboard('${key}')"  id="copy">Copiar</button>`;
+    output.innerHTML = (await outputText) + (await buttonCopy);
+    output.classList.add("result");
+  });
+}
+
+
+
+

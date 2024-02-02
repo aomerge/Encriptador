@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8"/>
     <title>ECDH Key Exchange Example</title>
-    <script src="Ecdh.js"></script>
+    <link rel="stylesheet" href="../public/css/index.css">
 </head>
 <body>
-    <h2>ECDH Key Exchange Simulation</h2>
-    <button onclick="performKeyExchange()">Perform Key Exchange</button>
-    <p>Shared Secret: <textarea id="sharedSecret" readonly rows="4" cols="50"></textarea></p>
+    <main class="elementGrid">
+        <section id="header"></section>    
+        <section style="height: 200px;"></section>         
+        <section class="buttons"></section> 
+        <section class="Ouput"></section>
+    </main>
+    <script src="../public/js/Ecdh.js"></script>    
+    <script src="../components/output.js"></script>
+    <script src="../components/header.js"></script>
+    <script  src="../components/textarea.js"></script>
+    <script src="../public/utils/performance.js"></script>
+    <script src="../components/buttons.js"></script>
+    <script src="../public/utils/copyClipboard.js"></script>
+    <script>
+        headerChange("ECDH Key Exchange Simulation");
+        ButtonsOne("Perform Key Exchange");  
+        showOutput();      
+        performKeyExchange();
+    </script>                
 </body>
 </html>

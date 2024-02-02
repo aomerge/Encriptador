@@ -1,6 +1,6 @@
 let publicKey, privateKey;
 
-async function generateKeyPair() {
+async function generateKeyPairs() {
   const keyPair = await window.crypto.subtle.generateKey(
     {
       name: "RSA-OAEP",
@@ -21,12 +21,14 @@ async function generateKeyPair() {
 async function displayKey(key, elementId) {
   const exportedKey = await window.crypto.subtle.exportKey("spki", key);
   const base64Key = btoa(String.fromCharCode(...new Uint8Array(exportedKey)));
-  document.getElementById(elementId).value = base64Key;
+  const element = document.getElementById(elementId);
+  const keyElement = `<p>${base64Key}</p>`;
+  element.innerHTML = keyElement;
+  return keyElement;
 }
 
-async function performEncryption() {
-  const inputText = document.getElementById("inputText").value;
-  const encoded = new TextEncoder().encode(inputText);
+async function encrypt(text) {
+  const encoded = new TextEncoder().encode(text);
   const encrypted = await window.crypto.subtle.encrypt(
     {
       name: "RSA-OAEP",
@@ -35,17 +37,11 @@ async function performEncryption() {
     encoded
   );
   const encryptedText = btoa(String.fromCharCode(...new Uint8Array(encrypted)));
-  console.log(encryptedText);
-  document.getElementById("outputText").value = encryptedText;
+  return encryptedText;
 }
 
-async function performDecryption() {
-  const encryptedText = document.getElementById("outputText").value;
-  const encryptedBuffer = new Uint8Array(
-    atob(encryptedText)
-      .split("")
-      .map((char) => char.charCodeAt(0))
-  );
+async function decrypt(text) {
+  const encryptedBuffer = new Uint8Array(atob(text).split("").map((char) => char.charCodeAt(0)));
   const decrypted = await window.crypto.subtle.decrypt(
     {
       name: "RSA-OAEP",
@@ -54,5 +50,5 @@ async function performDecryption() {
     encryptedBuffer
   );
   const decryptedText = new TextDecoder().decode(decrypted);
-  document.getElementById("inputText").value = decryptedText;
+  return decryptedText;
 }
