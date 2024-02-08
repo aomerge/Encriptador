@@ -10,7 +10,7 @@ This project is an exploration of various cryptographic algorithms, implemented 
   Your browser does not support the video tag.
 </video>
 
-![Cryptography setting demo](./src/public/image/video_simplified_accelerated_x8_to_gif.gif)
+<img src="./src/public/image/video_optimized_accelerated_to_gif.gif" alt="Cryptography setting demo" width="1020" height="440"></img>
 
 
 ## Advanced Encryption Standard (AES)
