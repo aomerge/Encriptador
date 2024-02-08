@@ -41,6 +41,15 @@ h2 {
   font-weight: 700;
   line-height: 120%; /* 28.8px */
 }
+h3{
+  color: var(--Gray-gray-500, #343a40);
+  text-align: center;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 28.8px */
+}
 footer {
   background-color: var(--Dark-blue-dark-blue-300, #0a3871);
   color: var(--White-white-100, #ffffff);

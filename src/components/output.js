@@ -1,3 +1,6 @@
+/**
+ * Displays the output element on the page.
+ */
 function showOutput() {
     const OutputHTML = document.querySelector(".Ouput");
     const outputElement = `<div class="output" id="output">
@@ -148,6 +151,9 @@ function showOutput() {
     OutputHTML.innerHTML = outputElement;
 }
 
+/**
+ * Displays the output in the HTML document.
+ */
 function showOutputTwo (){
     const OutputHTML = document.querySelector(".Ouput");
     const outputElement = ` <section> 

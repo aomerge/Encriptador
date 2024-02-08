@@ -3,6 +3,10 @@
  * Renders a textarea with a password input field.
  * @returns {Promise<void>} A promise that resolves when the textarea is rendered.
  */
+/**
+ * Renders a textarea with a password input field.
+ * @returns {Promise<void>} A promise that resolves when the textarea is rendered.
+ */
 const TextareaPassword = async ()=>{
     const textareaHtml = await document.querySelector(".textarea");
     const textareaElement = `

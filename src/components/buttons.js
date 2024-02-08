@@ -1,3 +1,6 @@
+/**
+ * Renders the buttons for encryption and decryption.
+ */
 function ButtonsTwo () {
     const buttonsHtml =  document.querySelector(".buttons");
     const buttons =  ` <div id="bi">
@@ -20,6 +23,10 @@ function ButtonsTwo () {
     buttonsHtml.innerHTML = buttons;
 } 
 
+/**
+ * Renders buttons with a specific text.
+ * @param {string} text - The text to be displayed on the button.
+ */
 function ButtonsOne (text) {
     const buttonsHtml = document.querySelector(".buttons");
     const buttons = ` <div id="bi">
@@ -41,6 +48,9 @@ function ButtonsOne (text) {
     buttonsHtml.innerHTML = buttons;
 }
 
+/**
+ * Renders the buttons component.
+ */
 function ButtonsThree () {
     const buttonsHtml = document.querySelector(".buttons");
     const buttons = ` <div id="bi">

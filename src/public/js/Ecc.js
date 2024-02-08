@@ -1,5 +1,13 @@
+/**
+ * Public key for party A.
+ * @type {any}
+ */
 let publicKeyA, privateKeyA, publicKeyB, privateKeyB, sharedSecret;
 
+/**
+ * Generates two sets of key pairs for ECDH encryption.
+ * @returns {Promise<void>} A promise that resolves when the key pairs are generated.
+ */
 async function generateKeyPairs() {
   const keyPairA = await window.crypto.subtle.generateKey(
     {
@@ -38,6 +46,11 @@ async function generateKeyPairs() {
   button.classList.add("AniNone");
 }
 
+/**
+ * Encrypts the given text using AES-GCM encryption algorithm.
+ * @param {string} text - The text to be encrypted.
+ * @returns {Promise<string>} - The encrypted text.
+ */
 async function encrypt(text) {  
   const encoded = new TextEncoder().encode(text);
   const iv = window.crypto.getRandomValues(new Uint8Array(12));
@@ -61,6 +74,12 @@ async function encrypt(text) {
   return encryptedText;
 }
 
+/**
+ * Decrypts the given text using AES-GCM encryption.
+ * 
+ * @param {string} text - The encrypted text to be decrypted.
+ * @returns {Promise<string>} - A promise that resolves to the decrypted text.
+ */
 async function decrypt(text) {
   const encryptedData = text.split(",");
   const iv = new Uint8Array(encryptedData.slice(0, 12).map(Number));
