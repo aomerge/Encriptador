@@ -10,10 +10,7 @@ This project is an exploration of various cryptographic algorithms, implemented 
   Your browser does not support the video tag.
 </video>
 
-<script>
-  var myVideo = document.getElementById('myVideo');
-  myVideo.playbackRate = 3.0; // Set playback rate to 2x
-</script>
+![Cryptography setting demo](./src/public/image/video_simplified_accelerated_x8_to_gif.gif)
 
 
 ## Advanced Encryption Standard (AES)
